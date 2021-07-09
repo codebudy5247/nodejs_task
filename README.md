@@ -92,8 +92,6 @@ JWT_SECRET =  // xyz
 
 - Response: 200 (application/json)
 
-  - Body
-
   
         {
   "result": {
@@ -125,9 +123,11 @@ JWT_SECRET =  // xyz
     "name":"xyz"
   }
 ## Google signin [POST /api/users/auth/google/signin]
+
+
    - Response: 200 (application/json)
 
-  - Body
+  
      {
   "result": {
     "_id": "60e8574fcb1d653a1c8248a1",
@@ -150,14 +150,14 @@ JWT_SECRET =  // xyz
 ## Facebook signup [POST /api/users/auth/google/signup]
    - Response: 201 (application/json)
 
-  - Body
+  
 
   {
     "email":"xyz@example.com",
     "name":"xyz"
   }
 ## Facebook signin [POST /api/users/auth/google/signin]
-   - Body
+   
         {
   "result": {
     "_id": "60e8574fcb1d653a1c8248a1",
