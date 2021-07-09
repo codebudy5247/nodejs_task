@@ -5,7 +5,17 @@ import User from "../models/userModel.js";
 
 //User Login
 const signup = async (req, res) => {
-  const { email, password, name, phoneNumber, Class, grade, month,year,date } = req.body;
+  const {
+    email,
+    password,
+    name,
+    phoneNumber,
+    Class,
+    grade,
+    month,
+    year,
+    date,
+  } = req.body;
 
   try {
     const oldUser = await User.findOne({ email });
@@ -60,19 +70,54 @@ const signin = async (req, res) => {
     if (!isPasswordCorrect)
       return res.status(400).json({ message: "Invalid credentials" });
 
-    const token = jwt.sign({ email: oldUser.email, id: oldUser._id },   process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign(
+      { email: oldUser.email, id: oldUser._id },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1h",
+      }
+    );
 
     res.status(200).json({ result: oldUser, token });
   } catch (err) {
-      console.log(err)
+    console.log(err);
     res.status(500).json({ message: "Something went wrong" });
   }
 };
 
+//Google Signup
+const googleSignup = async (req, res) => {
+  const { email, name } = req.body;
+
+  try {
+    const oldUser = await User.findOne({ email });
+
+    if (oldUser)
+      return res.status(400).json({ message: "User already exists" });
+
+    const result = await User.create({
+      email,
+
+      name,
+    });
+
+    const token = jwt.sign(
+      { email: result.email, id: result._id },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "11h",
+      }
+    );
+
+    res.status(201).json({ result, token });
+  } catch (error) {
+    res.status(500).json({ message: "Something went wrong" });
+
+    console.log(error);
+  }
+};
 //Google Sigin
-const googlesignin = async (req, res) => {
+const googleSignin = async (req, res) => {
   console.log(req.body);
   const { email, name } = req.body;
 
@@ -96,7 +141,72 @@ const googlesignin = async (req, res) => {
   }
 };
 
+//Facebook Signup
+const facebookSignup = async (req, res) => {
+  const { email, name } = req.body;
+
+  try {
+    const oldUser = await User.findOne({ email });
+
+    if (oldUser)
+      return res.status(400).json({ message: "User already exists" });
+
+    const result = await User.create({
+      email,
+
+      name,
+    });
+
+    const token = jwt.sign(
+      { email: result.email, id: result._id },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "11h",
+      }
+    );
+
+    res.status(201).json({ result, token });
+  } catch (error) {
+    res.status(500).json({ message: "Something went wrong" });
+
+    console.log(error);
+  }
+};
+
 //Facebook Signin
+const facebookSignin = async (req, res) => {
+  console.log(req.body);
+  const { email, name } = req.body;
+
+  try {
+    const oldUser = await User.findOne({ email });
+
+    if (!oldUser)
+      return res.status(404).json({ message: "User doesn't exist" });
+
+    const token = jwt.sign(
+      { email: oldUser.email, id: oldUser._id },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "11h",
+      }
+    );
+
+    res.status(200).json({ result: oldUser, token });
+  } catch (err) {
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
 
 //Forgot Password
-export { signin, signup, googlesignin };
+
+
+
+export {
+  signin,
+  signup,
+  googleSignup,
+  googleSignin,
+  facebookSignin,
+  facebookSignup,
+};
